@@ -280,6 +280,9 @@ button[type="submit"] {
   </div>
   <h2>نموذج طلب المنتجات (سوريا)</h2>
   <form id="orderForm">
+    <!-- حقل مخفي لمعرّف الجهاز -->
+    <input type="hidden" name="deviceId" id="deviceIdField">
+
     <div class="form-group">
       <label>المحافظة / المدينة *</label>
       <input type="text" name="governorate" placeholder="مثال: حلب - حماه - حمص - دمشق ... إلخ" required>
@@ -343,7 +346,6 @@ button[type="submit"] {
     </div>
   </div>
 </div>
-
 <datalist id="product-list">
   <option value="2101 حمص العجمي مغلف">
   <option value="2102 متبل العجمي مغلف">
@@ -422,7 +424,6 @@ button[type="submit"] {
   <option value="2807 عبوة دبس رمان طبيعي العجمي 920غ">
   <option value="2809 ظرف دبس رمان MNZ">
 </datalist>
-
 <script>
 const productWeights = {
   "2101 حمص العجمي مغلف": "275 غرام",
@@ -502,9 +503,18 @@ const productWeights = {
   "2807 عبوة دبس رمان طبيعي العجمي 920غ": "920 غرام",
   "2809 ظرف دبس رمان MNZ": "9 غرام"
 };
-
 const PALLET_MAX_KG = 619;
 let rowCounter = 0;
+
+// ===================== معرّف الجهاز الثابت =====================
+function getDeviceId() {
+  let deviceId = localStorage.getItem("alajamy_orders_device_id");
+  if (!deviceId) {
+    deviceId = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).substring(2, 10);
+    localStorage.setItem("alajamy_orders_device_id", deviceId);
+  }
+  return deviceId;
+}
 
 function arabicToLatinDigits(str) {
   const map = {
@@ -515,7 +525,6 @@ function arabicToLatinDigits(str) {
   };
   return str.replace(/[٠-٩۰-۹]/g, d => map[d] || d);
 }
-
 function extractQuantity(line) {
   const latin = arabicToLatinDigits(line);
   let cleaned = latin
@@ -532,7 +541,6 @@ function extractQuantity(line) {
   if (large.length > 0) return Math.max(...large);
   return Math.max(...nums);
 }
-
 function extractWeightInfo(line) {
   const latin = arabicToLatinDigits(line).toLowerCase().replace(/\s+/g, ' ');
   if (/9\s*كغ|سطل.*9|9كغ/.test(latin)) return { text: '9 كغ' };
@@ -562,7 +570,6 @@ function extractWeightInfo(line) {
   if (/90/.test(latin)) return { text: '90 غرام' };
   if (/60/.test(latin)) return { text: '60 غرام' };
   if (/9\s*غ|ظرف/.test(latin)) return { text: '9 غرام' };
-
   const gramMatch = latin.match(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام)/i) ||
                     latin.match(/(غرام|غ|جرام)\s*(\d+(?:[.,]\d+)?)/i);
   if (gramMatch) {
@@ -571,7 +578,6 @@ function extractWeightInfo(line) {
   }
   return null;
 }
-
 function findBestProduct(line) {
   const clean = arabicToLatinDigits(line).toLowerCase().replace(/\s+/g, ' ').trim();
   const weightInfo = extractWeightInfo(clean);
@@ -583,16 +589,12 @@ function findBestProduct(line) {
   const isWrapped = /مغلف|مغلفة|ربط/.test(clean);
   const isHot = /حار|حارة/.test(clean);
   const isNatural = /طبيعي|طبيعية/.test(clean);
-
-  // Brands
   const hasAjami = /عجمي|العجمي/.test(clean);
   const hasZad = /زاد|زاد العربي|اكسترا|إكسترا/.test(clean);
   const hasShaabi = /شعبي|الشعبي/.test(clean);
   const hasHimsani = /حمصاني|الحمصاني/.test(clean);
   const hasKhal = /خال|الخال|بركات/.test(clean);
   const hasMNZ = /mnz|ام ان زد|إم إن زد/.test(clean);
-
-  // Categories
   const hasHummus = /حمص/.test(clean);
   const hasMutabbal = /متبل/.test(clean);
   const hasGarlic = /ثوم|توم|كريم ثوم|كريم توم/.test(clean);
@@ -602,8 +604,6 @@ function findBestProduct(line) {
   const hasHotSauce = /صلصة حارة|شطة|حار/.test(clean) && !hasGarlic;
   const hasPomegranate = /دبس|رمان|دبس رمان/.test(clean);
   const hasHalfMade = /نصف مصن|نصف مصنع|مريق|سميك|وسط/.test(clean);
-
-  // ===== معجون الطماطم =====
   if (hasTomato) {
     if (hasMNZ) {
       if (weight === 4 || /4\s*كغ/.test(clean)) return "2611 معجون طماطم MNZ 4كغ";
@@ -620,8 +620,6 @@ function findBestProduct(line) {
     if (weight === 500 || /500/.test(clean)) return "2602 معجون الطماطم العجمي 500غ";
     return "2601 معجون الطماطم العجمي 100غ";
   }
-
-  // ===== دبس الرمان =====
   if (hasPomegranate) {
     if (hasMNZ || isPacket) return "2809 ظرف دبس رمان MNZ";
     if (isBulk || /بيدون/.test(clean)) return "2804 بيدون صلصة دبس رمان العجمي";
@@ -634,8 +632,6 @@ function findBestProduct(line) {
     if (weight === 500 || /500/.test(clean)) return "2803 عبوة صلصة دبس رمان العجمي 500غ";
     return "2802 عبوة صلصة دبس رمان العجمي 300غ";
   }
-
-  // ===== صلصة حارة =====
   if (hasHotSauce || (/صلصة/.test(clean) && isHot)) {
     if (hasMNZ || isPacket) return "2706 ظرف صلصة حارة MNZ";
     if (/بيدون/.test(clean) || weight > 1000) return "2702 بيدون صلصة حارة العجمي";
@@ -644,8 +640,6 @@ function findBestProduct(line) {
     if (weight === 220 || /220/.test(clean)) return "2704 عبوة صلصة حارة العجمي 220غ";
     return "2701 عبوة صلصة حارة العجمي 90غ";
   }
-
-  // ===== كاتشب =====
   if (hasKetchup) {
     if (hasMNZ) {
       if (isBucket || /9\s*كغ/.test(clean)) return "2207 سطل كتشب MNZ";
@@ -659,14 +653,10 @@ function findBestProduct(line) {
     if (weight === 480 || /480/.test(clean)) return "2130 عبوة كتشب العجمي 480غ";
     return "2122 عبوة كتشب العجمي 225غ";
   }
-
-  // ===== مايونيز =====
   if (hasMayo) {
     if (hasZad) return "2503 مايونيز زاد العربي دكما";
     return "2510 مايونيز العجمي دكما";
   }
-
-  // ===== كريم الثوم =====
   if (hasGarlic) {
     if (hasHalfMade) {
       if (/مريق/.test(clean)) return "2506 كريم ثوم نصف مصنّع مريق";
@@ -695,15 +685,12 @@ function findBestProduct(line) {
       if (isBulk) return "2110 كريم ثوم زاد العربي دكما";
       return "2306 كريم ثوم زاد العربي مغلف";
     }
-    // العجمي
     if (isBucket) return "2518 كريم ثوم العجمي سطل 1كغ";
     if (isBulk) return "2505 كريم ثوم العجمي دكما";
     if (isCan && (weight === 450 || /450/.test(clean))) return "2303 عبوة كريم ثوم العجمي 450غ";
     if (isCan || weight === 230) return "2304 عبوة كريم ثوم العجمي 230غ";
     return "2103 كريم ثوم العجمي مغلف";
   }
-
-  // ===== متبل =====
   if (hasMutabbal) {
     if (isBulk) return "2512 متبل العجمي دكما";
     if (isBucket) return "2515 متبل العجمي سطل 1كغ";
@@ -712,8 +699,6 @@ function findBestProduct(line) {
     if (isCan || weight === 230) return "2106 عبوة متبل العجمي 230غ";
     return "2102 متبل العجمي مغلف";
   }
-
-  // ===== حمص =====
   if (hasHummus) {
     if (hasKhal) {
       if (isBulk) return "2526 حمص الخال دكما";
@@ -730,18 +715,15 @@ function findBestProduct(line) {
       if (/نصاصي|نص/.test(clean) || weight === 500) return "2519 حمص زاد العربي نصاصي";
       return "2107 حمص زاد العربي مغلف";
     }
-    // العجمي
     if (isBucket) {
       if (weight === 5 || /5\s*كغ/.test(clean)) return "2514 حمص العجمي سطل 5كغ";
       return "2507 حمص العجمي سطل 1كغ";
     }
-    if (isBulk) return "2511 حمص زاد العربي دكما"; // fallback
+    if (isBulk) return "2511 حمص زاد العربي دكما";
     if (weight === 450 || /450/.test(clean)) return "2104 عبوة حمص العجمي 450غ";
     if (weight === 230 || /230/.test(clean)) return "2105 عبوة حمص العجمي 230غ";
     return "2101 حمص العجمي مغلف";
   }
-
-  // Fallback: search by partial name
   for (const fullName of Object.keys(productWeights)) {
     const short = fullName.replace(/^\d+\s*/, '').toLowerCase();
     if (clean.includes(short) || short.includes(clean.replace(/\d+/g, '').trim())) {
@@ -750,7 +732,6 @@ function findBestProduct(line) {
   }
   return null;
 }
-
 function parseWhatsAppText(text) {
   const lines = text.split(/\n|\r/).map(l => l.trim()).filter(l => l.length > 1);
   const results = [];
@@ -778,7 +759,6 @@ function parseWhatsAppText(text) {
   }
   return results;
 }
-
 function fillFromParsed(results) {
   if (results.length === 0) {
     alert('لم يتم التعرف على أي أصناف.\nتأكد من وجود كميات واضحة في النص.');
@@ -804,13 +784,11 @@ function fillFromParsed(results) {
   updateTotalWeight();
   alert(`تم تعبئة ${results.length} صنف بنجاح ✅\nراجع الكميات والأوزان قبل الإرسال.`);
 }
-
 function isDuplicate(v, c) {
   return [...document.querySelectorAll('[name^="product_"]')]
     .filter(i => i !== c && i.value.trim() !== "")
     .some(i => i.value.trim() === v);
 }
-
 function parseWeightToKg(weightStr) {
   if (!weightStr) return 0;
   const s = weightStr.trim().toLowerCase().replace(/,/g, '.');
@@ -820,14 +798,12 @@ function parseWeightToKg(weightStr) {
   if (s.includes('غرام') || s.includes('غ')) return isNaN(num) ? 0 : num / 1000;
   return isNaN(num) ? 0 : num;
 }
-
 function getPalletText(count) {
   if (count <= 0) return '';
   if (count === 1) return 'طبلية واحدة';
   if (count === 2) return 'طبليتين';
   return count + ' طبالي';
 }
-
 function updateTotalWeight() {
   let totalKg = 0;
   document.querySelectorAll('#itemsBody tr').forEach(row => {
@@ -857,7 +833,6 @@ function updateTotalWeight() {
     statusEl.style.color = '#d35400';
   }
 }
-
 function getDefaultWeightSelect(id, selectedValue = '') {
   const options = [
     '9 غرام', '60 غرام', '90 غرام', '100 غرام', '200 غرام', '220 غرام', '225 غرام',
@@ -877,7 +852,6 @@ function getDefaultWeightSelect(id, selectedValue = '') {
   html += `</select>`;
   return html;
 }
-
 function addRow() {
   const id = rowCounter++;
   const tr = document.createElement('tr');
@@ -925,7 +899,6 @@ function addRow() {
     updateTotalWeight();
   });
 }
-
 function clearAllItems() {
   if (confirm('هل أنت متأكد من مسح كل الأصناف؟')) {
     document.getElementById('itemsBody').innerHTML = '';
@@ -934,7 +907,6 @@ function clearAllItems() {
     updateTotalWeight();
   }
 }
-
 function getOrderSummaryForDisplay() {
   const rows = document.querySelectorAll('#itemsBody tr');
   let summary = `عدد الأصناف: ${rows.length}\n───────────────\n\n`;
@@ -959,7 +931,6 @@ function getOrderSummaryForDisplay() {
   if (pallets > 0) summary += `عدد الطبالي: ${getPalletText(pallets)}\n`;
   return summary.trim();
 }
-
 function buildWhatsAppMessage() {
   const today = new Date();
   const weekdays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
@@ -1003,7 +974,6 @@ function buildWhatsAppMessage() {
   msg += `إجمالي الأصناف: ${idx - 1}\nشكراً لكم – بانتظار التأكيد والتوصيل 🛒`;
   return msg;
 }
-
 function reindexItems() {
   const rows = Array.from(document.querySelectorAll('#itemsBody tr'));
   const validRows = [];
@@ -1038,14 +1008,12 @@ function reindexItems() {
   updateTotalWeight();
   return validRows.length;
 }
-
 document.getElementById('toggleImportBtn').addEventListener('click', function() {
   const section = document.getElementById('importSection');
   const isHidden = section.style.display === 'none' || section.style.display === '';
   section.style.display = isHidden ? 'block' : 'none';
   this.textContent = isHidden ? '▲ إخفاء استيراد الواتساب' : '📥 استيراد طلب من واتساب';
 });
-
 document.getElementById('parseBtn').addEventListener('click', function() {
   const text = document.getElementById('whatsappText').value.trim();
   if (!text) {
@@ -1055,9 +1023,11 @@ document.getElementById('parseBtn').addEventListener('click', function() {
   const results = parseWhatsAppText(text);
   fillFromParsed(results);
 });
-
 addRow();
 updateTotalWeight();
+
+// تعبئة معرّف الجهاز عند التحميل
+document.getElementById('deviceIdField').value = getDeviceId();
 
 document.getElementById('orderForm').addEventListener('submit', e => {
   e.preventDefault();
@@ -1070,13 +1040,16 @@ document.getElementById('orderForm').addEventListener('submit', e => {
     alert('يجب إضافة منتج واحد على الأقل');
     return;
   }
+  // تأكيد وجود deviceId قبل الإرسال
+  document.getElementById('deviceIdField').value = getDeviceId();
   document.getElementById('reviewText').textContent = getOrderSummaryForDisplay();
   document.getElementById('reviewModal').style.display = 'flex';
 });
-
 document.getElementById('confirmAndSend').onclick = function() {
   document.getElementById('reviewModal').style.display = 'none';
   reindexItems();
+  // تأكيد وجود deviceId مرة أخرى
+  document.getElementById('deviceIdField').value = getDeviceId();
   const msg = buildWhatsAppMessage();
   const phone = '905522221247';
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1100,9 +1073,10 @@ document.getElementById('confirmAndSend').onclick = function() {
     document.getElementById('whatsappText').value = '';
     document.getElementById('importSection').style.display = 'none';
     document.getElementById('toggleImportBtn').textContent = '📥 استيراد طلب من واتساب';
+    // إعادة تعبئة deviceId بعد reset
+    document.getElementById('deviceIdField').value = getDeviceId();
   });
 };
-
 document.getElementById('cancelReview').onclick = function() {
   document.getElementById('reviewModal').style.display = 'none';
 };
