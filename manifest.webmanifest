@@ -1,0 +1,31 @@
+{
+  "name": "نموذج طلب منتجات العجمي",
+  "short_name": "طلب العجمي",
+  "description": "اطلب منتجات العجمي الأصلية بسهولة",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#005a63",
+  "theme_color": "#005a63",
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
