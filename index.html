@@ -3,31 +3,28 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"/>
-<title>نموذج طلب المنتجات (سوريا)</title>
+<title>نموذج طلب منتجات العجمي - تركيا</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
-<meta property="og:title" content="نموذج طلب المنتجات (سوريا)">
+<meta property="og:title" content="نموذج طلب منتجات العجمي - تركيا">
 <meta property="og:description" content="اطلب منتجات العجمي الأصلية بسهولة">
 <meta property="og:image" content="logo.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#005a63">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#006d77">
 <style>
 :root {
-  --turquoise-dark: #005a63;
-  --turquoise-medium: #0e8a90;
-  --turquoise-light: #6fb5ae;
-  --turquoise-pale: #d0efeb;
-  --text-dark: #0a1818;
-  --blur-bg: rgba(255,255,255,0.95);
-  --border: #8fc4be;
+  --turquoise-dark: #006d77;
+  --turquoise-medium: #119da4;
+  --turquoise-light: #83c5be;
+  --turquoise-pale: #e0f7f4;
+  --text-dark: #0d1f1f;
+  --blur-bg: rgba(255,255,255,0.94);
+  --border: #a0d4cf;
 }
 * { box-sizing:border-box; margin:0; padding:0; }
 body {
@@ -44,8 +41,8 @@ body {
   padding: 24px 20px;
   max-width: 720px;
   margin: 20px auto;
-  box-shadow: 0 10px 35px rgba(0,90,99,.28);
-  border: 1px solid rgba(111,181,174,0.35);
+  box-shadow: 0 10px 35px rgba(0,109,119,.25);
+  border: 1px solid rgba(131,197,190,0.3);
 }
 .header { text-align:center; margin-bottom:24px; }
 .logo-img { max-width:320px; width:100%; margin:auto; display:block; }
@@ -64,7 +61,6 @@ input::placeholder, textarea::placeholder {
   color: #666 !important;
   opacity: 0.9;
 }
-/* إزالة الـ Spinner من حقل الكمية */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -76,9 +72,9 @@ input[type=number] {
 }
 table { width:100%; margin:12px 0 20px; }
 th, td { padding:12px 10px; text-align:right; border-bottom:1px solid #eee; }
-th { background:rgba(14,138,144,0.1); }
+th { background:rgba(17,157,164,0.08); }
 .remove-btn {
-  background:#c0392b;
+  background:#e74c3c;
   color:#fff;
   border:none;
   padding:10px;
@@ -98,9 +94,9 @@ th { background:rgba(14,138,144,0.1); }
   font-size:1.15rem;
   font-weight:600;
 }
-.clear-btn { background:#d35400; margin-top:8px; }
-.import-toggle-btn { background:#0a6b6f; margin-bottom:8px; }
-.parse-btn { background:#1e7a32; margin-top:12px; }
+.clear-btn { background:#e67e22; margin-top:8px; }
+.import-toggle-btn { background:#0d7377; margin-bottom:8px; }
+.parse-btn { background:#2e7d32; margin-top:12px; }
 button[type="submit"] {
   width:100%;
   padding:16px;
@@ -143,13 +139,18 @@ button[type="submit"] {
 }
 .note a:hover { text-decoration:underline; }
 .weight-box {
-  background: linear-gradient(135deg, #d0efeb, #ffffff);
+  background: linear-gradient(135deg, #e0f7f4, #ffffff);
   border: 2px solid var(--turquoise-medium);
   border-radius: 14px;
   padding: 16px 18px;
   margin: 18px 0 10px;
   text-align: center;
   transition: all 0.3s ease;
+}
+.weight-box.over-limit {
+  border-color: #e67e22;
+  background: linear-gradient(135deg, #fff3e0, #ffffff);
+  box-shadow: 0 0 0 3px rgba(230,126,34,0.15);
 }
 .weight-title {
   font-weight: 700;
@@ -163,12 +164,12 @@ button[type="submit"] {
   color: var(--turquoise-dark);
   margin: 4px 0;
 }
+.weight-box.over-limit .weight-value { color: #e67e22; }
 .weight-status {
   font-size: 1.05rem;
   font-weight: 600;
   margin-top: 10px;
   line-height: 1.5;
-  color: #1e7a32;
 }
 .weight-limit {
   font-size: 0.88rem;
@@ -177,7 +178,7 @@ button[type="submit"] {
 }
 #importSection {
   display: none;
-  background: #e8f6f5;
+  background: #f0faf9;
   border: 2px dashed var(--turquoise-medium);
   border-radius: 14px;
   padding: 16px;
@@ -198,7 +199,7 @@ button[type="submit"] {
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.55);
+  background:rgba(0,0,0,0.5);
   z-index:1000;
   align-items:center;
   justify-content:center;
@@ -250,7 +251,7 @@ button[type="submit"] {
   font-weight:600;
 }
 #reviewModal .main-btn {
-  background:linear-gradient(90deg,#0e8a90,#6fb5ae);
+  background:linear-gradient(90deg,#119da4,#83c5be);
   color:white;
 }
 #reviewModal .cancel-btn {
@@ -283,13 +284,11 @@ button[type="submit"] {
   <div class="header">
     <img src="logo.png" class="logo-img" alt="العجمي" loading="lazy">
   </div>
-  <h2>نموذج طلب المنتجات (سوريا)</h2>
+  <h2>نموذج طلب منتجات العجمي (تركيا)</h2>
   <form id="orderForm">
-    <!-- حقل مخفي لمعرّف الجهاز -->
-    <input type="hidden" name="deviceId" id="deviceIdField">
     <div class="form-group">
       <label>المحافظة / المدينة *</label>
-      <input type="text" name="governorate" placeholder="مثال: حلب - حماه - حمص - دمشق ... إلخ" required>
+      <input type="text" name="governorate" placeholder="مثال: إسطنبول - قونيا - أنطاليا - غازي عنتاب - مرسين ..." required>
     </div>
     <div class="form-group">
       <label>اسم الزبون *</label>
@@ -300,7 +299,7 @@ button[type="submit"] {
       <label style="margin-bottom:8px;">الصق نص الطلب من الواتساب هنا</label>
       <textarea id="whatsappText" placeholder="الصق هنا نص الطلب من الواتساب..."></textarea>
       <div class="hint">
-       يتعرف على الأسماء المختصرة والدكما والسطل والربط والمغلف • المنتجات المعروفة تُملأ مع رقمها ووزنها تلقائياً لذلك يرجى مراجعة الطلب قبل الإرسال
+        يملأ الأصناف كما هي مكتوبة حتى لو ما طابقها مع القائمة • يدعم كل أشكال الكتابة
       </div>
       <button type="button" class="parse-btn" id="parseBtn">تعبئة تلقائية</button>
     </div>
@@ -320,19 +319,19 @@ button[type="submit"] {
       <button type="button" class="add-btn" onclick="addRow()">+ إضافة صنف</button>
       <button type="button" class="clear-btn" onclick="clearAllItems()">مسح كل الأصناف</button>
       <div id="totalWeightBox" class="weight-box">
-        <div class="weight-title">وزن الطلبية الإجمالي (مع هامش التغليف)</div>
+        <div class="weight-title">وزن الطلبية الإجمالي</div>
         <div id="totalWeightValue" class="weight-value">0.00 كغ</div>
-        <div id="weightStatus" class="weight-status">أضف منتجات لحساب الوزن</div>
-        <div class="weight-limit">ملاحظة: أصناف الظروف تُحسب حسب وزن الطرد المحدد (مثل 4800 غ أو 3500 غ) + هامش تغليف 3%</div>
+        <div id="weightStatus" class="weight-status">أضف منتجات لحساب الوزن وعدد الطبالي</div>
+        <div class="weight-limit">الحد الأقصى للطبلية الواحدة: 619 كغ</div>
       </div>
     </div>
     <div class="form-group">
       <label>ملاحظات</label>
-      <textarea name="notes" placeholder="أي تفاصيل إضافية"></textarea>
+      <textarea name="notes" placeholder="أي تفاصيل إضافية (نوع التغليف أو وقت التسليم...)"></textarea>
     </div>
     <button type="submit" id="submitBtn">إرسال الطلب</button>
     <div class="note">
-      في حال وجود استفسار حول عمل التطبيق، يرجى التواصل عبر الواتس:
+      في حال وجود أي استفسار حول عمل التطبيق يرجى التواصل عبر الواتس:
       <a href="https://wa.me/905345758221" target="_blank" rel="noopener">00905345758221</a> 📲
     </div>
   </form>
@@ -340,7 +339,7 @@ button[type="submit"] {
     <div class="modal-content">
       <h3>مراجعة الطلب قبل الإرسال</h3>
       <pre id="reviewText"></pre>
-      <p style="text-align:center; font-weight:bold; margin:20px 0; color:#c0392b;">
+      <p style="text-align:center; font-weight:bold; margin:20px 0; color:#d32f2f;">
         هل الطلب صحيح وكامل؟
       </p>
       <div class="buttons">
@@ -351,176 +350,70 @@ button[type="submit"] {
   </div>
 </div>
 <datalist id="product-list">
-  <option value="2101 حمص العجمي مغلف">
-  <option value="2102 متبل العجمي مغلف">
-  <option value="2103 كريم ثوم العجمي مغلف">
-  <option value="2104 عبوة حمص العجمي 450غ">
-  <option value="2105 عبوة حمص العجمي 230غ">
-  <option value="2106 عبوة متبل العجمي 230غ">
-  <option value="2107 حمص زاد العربي مغلف">
-  <option value="2108 متبل زاد العربي مغلف">
-  <option value="2109 حمص الشعبي مغلف">
-  <option value="2110 كريم ثوم زاد العربي دكما">
-  <option value="2111 حمص الحمصاني مغلف">
-  <option value="2113 حمص الخال ربط">
-  <option value="2114 كريم ثوم الخال ربط">
-  <option value="2115 عبوة متبل العجمي 500غ">
-  <option value="2118 كريم ثوم الشعبي مغلف">
-  <option value="2122 عبوة كتشب العجمي 225غ">
-  <option value="2123 ظرف كتشب العجمي 9غ">
-  <option value="2124 كتشب العجمي دكما">
-  <option value="2125 كتشب العجمي بيدون">
-  <option value="2130 عبوة كتشب العجمي 480غ">
-  <option value="2205 كتشب العجمي 1100غ">
-  <option value="2207 سطل كتشب MNZ">
-  <option value="2208 عبوة كتشب MNZ 480غ">
-  <option value="2209 ظرف كتشب 9غ MNZ">
-  <option value="2303 عبوة كريم ثوم العجمي 450غ">
-  <option value="2304 عبوة كريم ثوم العجمي 230غ">
-  <option value="2305 كريم ثوم الحمصاني مغلف">
-  <option value="2306 كريم ثوم زاد العربي مغلف">
-  <option value="2307 كريم ثوم العجمي مغلف حار">
-  <option value="2502 كريم ثوم الشعبي دكما">
-  <option value="2503 مايونيز زاد العربي دكما">
-  <option value="2505 كريم ثوم العجمي دكما">
-  <option value="2506 كريم ثوم نصف مصنّع مريق">
-  <option value="2507 حمص العجمي سطل 1كغ">
-  <option value="2508 كريم ثوم MNZ دكمة">
-  <option value="2510 مايونيز العجمي دكما">
-  <option value="2511 حمص زاد العربي دكما">
-  <option value="2512 متبل العجمي دكما">
-  <option value="2513 كريم ثوم الشعبي ظرف">
-  <option value="2514 حمص العجمي سطل 5كغ">
-  <option value="2515 متبل العجمي سطل 1كغ">
-  <option value="2516 كريم ثوم نصف مصنّع سميك">
-  <option value="2517 كريم ثوم نصف مصنع ربط">
-  <option value="2518 كريم ثوم العجمي سطل 1كغ">
-  <option value="2519 حمص زاد العربي نصاصي">
-  <option value="2521 حمص الشعبي ربط">
-  <option value="2522 كريم ثوم العجمي دكما حار">
-  <option value="2523 كريم ثوم الشعبي دكما">
-  <option value="2524 كريم ثوم نصف مصنع وسط">
-  <option value="2525 حمص الشعبي دكما">
-  <option value="2526 حمص الخال دكما">
-  <option value="2527 كريم ثوم الخال دكما">
-  <option value="2528 ثوم العجمي 57غ">
-  <option value="2601 معجون الطماطم العجمي 100غ">
-  <option value="2602 معجون الطماطم العجمي 500غ">
-  <option value="2603 معجون الطماطم العجمي 1كغ">
-  <option value="2604 معجون الطماطم العجمي 2كغ">
-  <option value="2605 معجون الطماطم العجمي 4كغ">
-  <option value="2608 سطل معجون طماطم العجمي 5كغ">
-  <option value="2609 سطل معجون طماطم العجمي 9كغ">
-  <option value="2610 معجون طماطم MNZ 2كغ">
-  <option value="2611 معجون طماطم MNZ 4كغ">
-  <option value="2612 معجون طماطم MNZ 1كغ">
-  <option value="2701 عبوة صلصة حارة العجمي 90غ">
-  <option value="2702 بيدون صلصة حارة العجمي">
-  <option value="2703 ظرف صلصة حارة العجمي 9غ">
-  <option value="2704 عبوة صلصة حارة العجمي 220غ">
-  <option value="2705 عبوة صلصة حارة العجمي 800غ">
-  <option value="2706 ظرف صلصة حارة 9غ MNZ">
-  <option value="2801 عبوة صلصة دبس رمان العجمي 940غ">
-  <option value="2802 عبوة صلصة دبس رمان العجمي 300غ">
-  <option value="2803 عبوة صلصة دبس رمان العجمي 500غ">
-  <option value="2804 بيدون صلصة دبس رمان العجمي">
-  <option value="2805 ظرف دبس رمان العجمي 9غ">
-  <option value="2806 عبوة دبس رمان طبيعي العجمي 300غ">
-  <option value="2807 عبوة دبس رمان طبيعي العجمي 920غ">
-  <option value="2809 ظرف دبس رمان 9غ MNZ">
+  <option value="001 عجمي حمص بالطحينة 230غ">
+  <option value="002 عجمي كريم الثوم 230غ">
+  <option value="003 عجمي متبل 230غ">
+  <option value="004 عجمي حمص 450غ">
+  <option value="005 عجمي حمص 300غ">
+  <option value="006 عجمي حمص 225غ">
+  <option value="007 عجمي كريم الثوم 225غ">
+  <option value="008 عجمي متبل 450غ">
+  <option value="009 عجمي متبل 225غ">
+  <option value="010 زاد العربي حمص بالطحينة 230غ">
+  <option value="011 زاد العربي كريم الثوم 230غ">
+  <option value="012 زاد العربي متبل 230غ">
+  <option value="013 الحمصاني حمص 230غ">
+  <option value="014 الحمصاني كريم الثوم 230غ">
+  <option value="015 الخال حمص 230غ">
+  <option value="016 الخال كريم الثوم 230غ">
+  <option value="017 الخال متبل 230غ">
+  <option value="018 عجمي حمص بالكيلو">
+  <option value="019 الحمصاني حمص بالكيلو">
+  <option value="020 زاد العربي كريم الثوم بالكيلو">
+  <option value="021 الحمصاني كريم الثوم بالكيلو">
+  <option value="022 الخال كريم الثوم بالكيلو">
+  <option value="023 MNZ كريم الثوم بالكيلو">
+  <option value="024 عجمي متبل بالكيلو">
+  <option value="025 حمص خام أسبتيك 20 كغ">
+  <option value="026 2750غ عجمي لبنة">
+  <option value="027 900غ عجمي لبنة">
+  <option value="028 أبو عبدو حمص 300غ">
 </datalist>
 <script>
 const productWeights = {
-  "2101 حمص العجمي مغلف": "275 غرام",
-  "2102 متبل العجمي مغلف": "250 غرام",
-  "2103 كريم ثوم العجمي مغلف": "250 غرام",
-  "2104 عبوة حمص العجمي 450غ": "450 غرام",
-  "2105 عبوة حمص العجمي 230غ": "230 غرام",
-  "2106 عبوة متبل العجمي 230غ": "230 غرام",
-  "2107 حمص زاد العربي مغلف": "250 غرام",
-  "2108 متبل زاد العربي مغلف": "200 غرام",
-  "2109 حمص الشعبي مغلف": "200 غرام",
-  "2110 كريم ثوم زاد العربي دكما": "كغ",
-  "2111 حمص الحمصاني مغلف": "200 غرام",
-  "2113 حمص الخال ربط": "250 غرام",
-  "2114 كريم ثوم الخال ربط": "200 غرام",
-  "2115 عبوة متبل العجمي 500غ": "500 غرام",
-  "2118 كريم ثوم الشعبي مغلف": "200 غرام",
-  "2122 عبوة كتشب العجمي 225غ": "225 غرام",
-  "2123 ظرف كتشب العجمي 9غ": "طرد 4800 غ",
-  "2124 كتشب العجمي دكما": "5 كغ",
-  "2125 كتشب العجمي بيدون": "5 كغ",
-  "2130 عبوة كتشب العجمي 480غ": "480 غرام",
-  "2205 كتشب العجمي 1100غ": "1100 غرام",
-  "2207 سطل كتشب MNZ": "9 كغ",
-  "2208 عبوة كتشب MNZ 480غ": "480 غرام",
-  "2209 ظرف كتشب 9غ MNZ": "طرد 4800 غ",
-  "2303 عبوة كريم ثوم العجمي 450غ": "450 غرام",
-  "2304 عبوة كريم ثوم العجمي 230غ": "230 غرام",
-  "2305 كريم ثوم الحمصاني مغلف": "200 غرام",
-  "2306 كريم ثوم زاد العربي مغلف": "250 غرام",
-  "2307 كريم ثوم العجمي مغلف حار": "250 غرام",
-  "2502 كريم ثوم الشعبي دكما": "5 كغ",
-  "2503 مايونيز زاد العربي دكما": "كغ",
-  "2505 كريم ثوم العجمي دكما": "كغ",
-  "2506 كريم ثوم نصف مصنّع مريق": "كغ",
-  "2507 حمص العجمي سطل 1كغ": "1 كغ",
-  "2508 كريم ثوم MNZ دكمة": "كغ",
-  "2510 مايونيز العجمي دكما": "كغ",
-  "2511 حمص زاد العربي دكما": "كغ",
-  "2512 متبل العجمي دكما": "كغ",
-  "2513 كريم ثوم الشعبي ظرف": "60 غرام",
-  "2514 حمص العجمي سطل 5كغ": "5 كغ",
-  "2515 متبل العجمي سطل 1كغ": "1 كغ",
-  "2516 كريم ثوم نصف مصنّع سميك": "كغ",
-  "2517 كريم ثوم نصف مصنع ربط": "200 غرام",
-  "2518 كريم ثوم العجمي سطل 1كغ": "1 كغ",
-  "2519 حمص زاد العربي نصاصي": "500 غرام",
-  "2521 حمص الشعبي ربط": "300 غرام",
-  "2522 كريم ثوم العجمي دكما حار": "كغ",
-  "2523 كريم ثوم الشعبي دكما": "كغ",
-  "2524 كريم ثوم نصف مصنع وسط": "كغ",
-  "2525 حمص الشعبي دكما": "كغ",
-  "2526 حمص الخال دكما": "كغ",
-  "2527 كريم ثوم الخال دكما": "كغ",
-  "2528 ثوم العجمي 57غ": "طرد 3500 غ",
-  "2601 معجون الطماطم العجمي 100غ": "100 غرام",
-  "2602 معجون الطماطم العجمي 500غ": "500 غرام",
-  "2603 معجون الطماطم العجمي 1كغ": "1 كغ",
-  "2604 معجون الطماطم العجمي 2كغ": "2 كغ",
-  "2605 معجون الطماطم العجمي 4كغ": "4 كغ",
-  "2608 سطل معجون طماطم العجمي 5كغ": "5 كغ",
-  "2609 سطل معجون طماطم العجمي 9كغ": "9 كغ",
-  "2610 معجون طماطم MNZ 2كغ": "2 كغ",
-  "2611 معجون طماطم MNZ 4كغ": "4 كغ",
-  "2612 معجون طماطم MNZ 1كغ": "1 كغ",
-  "2701 عبوة صلصة حارة العجمي 90غ": "90 غرام",
-  "2702 بيدون صلصة حارة العجمي": "4200 غرام",
-  "2703 ظرف صلصة حارة العجمي 9غ": "طرد 4800 غ",
-  "2704 عبوة صلصة حارة العجمي 220غ": "220 غرام",
-  "2705 عبوة صلصة حارة العجمي 800غ": "800 غرام",
-  "2706 ظرف صلصة حارة 9غ MNZ": "طرد 4800 غ",
-  "2801 عبوة صلصة دبس رمان العجمي 940غ": "940 غرام",
-  "2802 عبوة صلصة دبس رمان العجمي 300غ": "300 غرام",
-  "2803 عبوة صلصة دبس رمان العجمي 500غ": "500 غرام",
-  "2804 بيدون صلصة دبس رمان العجمي": "5 كغ",
-  "2805 ظرف دبس رمان العجمي 9غ": "طرد 4800 غ",
-  "2806 عبوة دبس رمان طبيعي العجمي 300غ": "300 غرام",
-  "2807 عبوة دبس رمان طبيعي العجمي 920غ": "920 غرام",
-  "2809 ظرف دبس رمان 9غ MNZ": "طرد 4800 غ"
+  "001 عجمي حمص بالطحينة 230غ": "230 غرام",
+  "002 عجمي كريم الثوم 230غ": "230 غرام",
+  "003 عجمي متبل 230غ": "230 غرام",
+  "004 عجمي حمص 450غ": "علبة 450 غرام",
+  "005 عجمي حمص 300غ": "علبة 300 غرام",
+  "006 عجمي حمص 225غ": "علبة 225 غرام",
+  "007 عجمي كريم الثوم 225غ": "علبة 225 غرام",
+  "008 عجمي متبل 450غ": "علبة 450 غرام",
+  "009 عجمي متبل 225غ": "علبة 225 غرام",
+  "010 زاد العربي حمص بالطحينة 230غ": "230 غرام",
+  "011 زاد العربي كريم الثوم 230غ": "230 غرام",
+  "012 زاد العربي متبل 230غ": "230 غرام",
+  "013 الحمصاني حمص 230غ": "230 غرام",
+  "014 الحمصاني كريم الثوم 230غ": "230 غرام",
+  "015 الخال حمص 230غ": "230 غرام",
+  "016 الخال كريم الثوم 230غ": "230 غرام",
+  "017 الخال متبل 230غ": "230 غرام",
+  "018 عجمي حمص بالكيلو": "كيلو غرام",
+  "019 الحمصاني حمص بالكيلو": "كيلو غرام",
+  "020 زاد العربي كريم الثوم بالكيلو": "كيلو غرام",
+  "021 الحمصاني كريم الثوم بالكيلو": "كيلو غرام",
+  "022 الخال كريم الثوم بالكيلو": "كيلو غرام",
+  "023 MNZ كريم الثوم بالكيلو": "كيلو غرام",
+  "024 عجمي متبل بالكيلو": "كيلو غرام",
+  "025 حمص خام أسبتيك 20 كغ": "20 كغ",
+  "026 2750غ عجمي لبنة": "2750 غرام",
+  "027 900غ عجمي لبنة": "900 غرام",
+  "028 أبو عبدو حمص 300غ": "علبة 300 غرام"
 };
-// هامش وزن التغليف (3%)
-const PACKAGING_MARGIN = 0.03;
+
+const PALLET_MAX_KG = 619;
 let rowCounter = 0;
-// ===================== معرّف الجهاز الثابت =====================
-function getDeviceId() {
-  let deviceId = localStorage.getItem("alajamy_orders_device_id");
-  if (!deviceId) {
-    deviceId = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).substring(2, 10);
-    localStorage.setItem("alajamy_orders_device_id", deviceId);
-  }
-  return deviceId;
-}
+
 function arabicToLatinDigits(str) {
   const map = {
     '٠':'0','١':'1','٢':'2','٣':'3','٤':'4',
@@ -530,210 +423,145 @@ function arabicToLatinDigits(str) {
   };
   return str.replace(/[٠-٩۰-۹]/g, d => map[d] || d);
 }
+
+/* ========== استخراج الكمية - نسخة قوية جداً ========== */
 function extractQuantity(line) {
   const latin = arabicToLatinDigits(line);
+  
+  // 1. أولوية عالية: بعد كلمة "الكمية" أو "عدد" أو "كميه"
+  let match = latin.match(/(?:الكمية|كميه|كمية|عدد|qty|quantity)\s*[:=]?\s*(\d+(?:[.,]\d+)?)/i);
+  if (match) {
+    const num = parseFloat(match[1].replace(',', '.'));
+    if (num > 0 && num < 100000) return num;
+  }
+
+  // 2. الكمية في نهاية السطر (شائع جداً)
+  match = latin.match(/(\d+(?:[.,]\d+)?)\s*$/);
+  if (match) {
+    const num = parseFloat(match[1].replace(',', '.'));
+    if (num >= 1 && num < 100000) return num;
+  }
+
+  // 3. الكمية في بداية السطر
+  match = latin.match(/^(\d+(?:[.,]\d+)?)/);
+  if (match) {
+    const num = parseFloat(match[1].replace(',', '.'));
+    if (num >= 1 && num < 100000) return num;
+  }
+
+  // 4. أي رقم كبير نسبياً (نستبعد الأوزان المعروفة)
   let cleaned = latin
-    .replace(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام|كغ|كيلو|كغرام|ك\.غ)/gi, ' ')
-    .replace(/(غرام|غ|جرام|كغ|كيلو|كغرام|ك\.غ)\s*(\d+(?:[.,]\d+)?)/gi, ' ')
-    .replace(/\b(100|90|200|225|230|250|275|300|450|480|500|800|920|940|1100|4200|3500|57)\b/g, ' ');
-  const matches = cleaned.match(/(\d+(?:[.,]\d+)?)/g);
-  if (!matches || matches.length === 0) return null;
-  const nums = matches
-    .map(n => parseFloat(n.replace(',', '.')))
-    .filter(n => !isNaN(n) && n > 0 && n < 10000);
-  if (nums.length === 0) return null;
-  const large = nums.filter(n => n >= 5);
-  if (large.length > 0) return Math.max(...large);
-  return Math.max(...nums);
+    .replace(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام|كغ|كيلو|كغرام)/gi, ' ')
+    .replace(/(غرام|غ|جرام|كغ|كيلو|كغرام)\s*(\d+(?:[.,]\d+)?)/gi, ' ')
+    .replace(/\b(230|225|300|450|2750|900|20|00)\b/g, ' ');
+
+  const numbers = cleaned.match(/(\d+(?:[.,]\d+)?)/g);
+  if (numbers && numbers.length > 0) {
+    const nums = numbers
+      .map(n => parseFloat(n.replace(',', '.')))
+      .filter(n => !isNaN(n) && n >= 1 && n < 100000);
+    
+    if (nums.length > 0) {
+      // نفضل الأرقام الأكبر من 5
+      const large = nums.filter(n => n >= 5);
+      return large.length > 0 ? Math.max(...large) : Math.max(...nums);
+    }
+  }
+  return null;
 }
+
+/* ========== استخراج الوزن ========== */
 function extractWeightInfo(line) {
   const latin = arabicToLatinDigits(line).toLowerCase().replace(/\s+/g, ' ');
-  if (/9\s*كغ|سطل.*9|9كغ/.test(latin)) return { text: '9 كغ' };
-  if (/5\s*كغ|5كغ|بيدون/.test(latin)) return { text: '5 كغ' };
-  if (/4\s*كغ|4كغ/.test(latin)) return { text: '4 كغ' };
-  if (/2\s*كغ|2كغ/.test(latin)) return { text: '2 كغ' };
-  if (/1\s*كغ|1كغ|سطل\s*1/.test(latin)) return { text: '1 كغ' };
-  if (/دكما|دكمة|دكمه|طبشات|بالكيلو|كيلو|كغ/.test(latin) && !/\d+\s*كغ/.test(latin)) {
-    return { text: 'كغ' };
+  
+  if (/2750|كبيرة/.test(latin)) return { text: '2750 غرام' };
+  if (/900|صغيرة/.test(latin)) return { text: '900 غرام' };
+  if (/20\s*كغ|20كغ|أسبتيك|اسبتيك|خام/.test(latin)) return { text: '20 كغ' };
+  
+  if (/دكما|دكمة|دكمه|طبشات|بالكيلو|بال كيلو|كيلو|كغ/.test(latin) && !/\d+\s*كغ/.test(latin)) {
+    return { text: 'كيلو غرام' };
   }
-  if (/1100/.test(latin)) return { text: '1100 غرام' };
-  if (/940/.test(latin)) return { text: '940 غرام' };
-  if (/920/.test(latin)) return { text: '920 غرام' };
-  if (/800/.test(latin)) return { text: '800 غرام' };
-  if (/500/.test(latin)) return { text: '500 غرام' };
-  if (/480/.test(latin)) return { text: '480 غرام' };
-  if (/450/.test(latin)) return { text: '450 غرام' };
-  if (/4200|4\.2\s*كغ/.test(latin)) return { text: '4200 غرام' };
-  if (/3500/.test(latin)) return { text: 'طرد 3500 غ' };
-  if (/300/.test(latin)) return { text: '300 غرام' };
-  if (/275/.test(latin)) return { text: '275 غرام' };
-  if (/250/.test(latin)) return { text: '250 غرام' };
-  if (/230/.test(latin)) return { text: '230 غرام' };
-  if (/225/.test(latin)) return { text: '225 غرام' };
-  if (/220/.test(latin)) return { text: '220 غرام' };
-  if (/200/.test(latin)) return { text: '200 غرام' };
-  if (/100/.test(latin)) return { text: '100 غرام' };
-  if (/90/.test(latin)) return { text: '90 غرام' };
-  if (/60/.test(latin)) return { text: '60 غرام' };
-  if (/57\s*غ|57غ/.test(latin)) return { text: 'طرد 3500 غ' };
-  // الظروف → طرد 4800 غ (الافتراضي)
-  if (/9\s*غ|ظرف/.test(latin)) return { text: 'طرد 4800 غ' };
+  
+  if (/\b450\b/.test(latin)) return { text: 'علبة 450 غرام' };
+  if (/\b300\b/.test(latin)) return { text: 'علبة 300 غرام' };
+  if (/\b225\b/.test(latin)) return { text: 'علبة 225 غرام' };
+  if (/\b230\b/.test(latin)) return { text: '230 غرام' };
+  
   const gramMatch = latin.match(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام)/i) ||
                     latin.match(/(غرام|غ|جرام)\s*(\d+(?:[.,]\d+)?)/i);
   if (gramMatch) {
     const num = parseFloat((gramMatch[1] || gramMatch[2]).replace(',', '.'));
-    if (!isNaN(num) && num < 5000) return { text: num + ' غرام' };
+    if (!isNaN(num) && num > 0 && num < 10000) {
+      if ([450, 300, 225].includes(num)) return { text: 'علبة ' + num + ' غرام' };
+      return { text: num + ' غرام' };
+    }
   }
   return null;
 }
+
+/* ========== التعرف على المنتج ========== */
 function findBestProduct(line) {
   const clean = arabicToLatinDigits(line).toLowerCase().replace(/\s+/g, ' ').trim();
   const weightInfo = extractWeightInfo(clean);
-  const weight = weightInfo ? parseFloat(weightInfo.text) : null;
-  const isBulk = /دكما|دكمة|دكمه|طبشات|بالكيلو/.test(clean);
-  const isBucket = /سطل/.test(clean);
-  const isPacket = /ظرف|ظروف/.test(clean);
-  const isCan = /عبوة|علب/.test(clean);
-  const isWrapped = /مغلف|مغلفة|ربط/.test(clean);
-  const isHot = /حار|حارة/.test(clean);
-  const isNatural = /طبيعي|طبيعية/.test(clean);
-  const hasAjami = /عجمي|العجمي/.test(clean);
-  const hasZad = /زاد|زاد العربي|اكسترا|إكسترا/.test(clean);
-  const hasShaabi = /شعبي|الشعبي/.test(clean);
-  const hasHimsani = /حمصاني|الحمصاني/.test(clean);
+  const weightNum = weightInfo ? parseFloat(weightInfo.text.replace(/[^\d.]/g, '')) : null;
+  
+  const isBulk = /دكما|دكمة|دكمه|طبشات|بالكيلو|بال كيلو|كيلو|كغ/.test(clean);
   const hasKhal = /خال|الخال|بركات/.test(clean);
-  const hasMNZ = /mnz|ام ان زد|إم إن زد/.test(clean);
-  const hasHummus = /حمص/.test(clean);
+  const hasHimsani = /حمصاني|الحمصاني|وسط/.test(clean);
+  const hasZad = /زاد|زاد العربي|اكسترا|إكسترا|ممتاز/.test(clean);
+  const hasAbuAbdo = /أبو عبدو|ابو عبدو|أبوعدو|ابوعدو|طيبه|طيبة/.test(clean);
+  const hasLabneh = /لبنة|لبنه/.test(clean);
+  const hasGarlic = /ثوم|توم|كريم ثوم|كريم توم|ثومه/.test(clean);
   const hasMutabbal = /متبل/.test(clean);
-  const hasGarlic = /ثوم|توم|كريم ثوم|كريم توم/.test(clean);
-  const hasKetchup = /كتشب|كاتشب|كتشاب/.test(clean);
-  const hasMayo = /مايونيز|مايونيز/.test(clean);
-  const hasTomato = /معجون|طماطم|بندورة/.test(clean);
-  const hasHotSauce = /صلصة حارة|شطة|حار/.test(clean) && !hasGarlic;
-  const hasPomegranate = /دبس|رمان|دبس رمان/.test(clean);
-  const hasHalfMade = /نصف مصن|نصف مصنع|مريق|سميك|وسط/.test(clean);
-  if (hasTomato) {
-    if (hasMNZ) {
-      if (weight === 4 || /4\s*كغ/.test(clean)) return "2611 معجون طماطم MNZ 4كغ";
-      if (weight === 2 || /2\s*كغ/.test(clean)) return "2610 معجون طماطم MNZ 2كغ";
-      return "2612 معجون طماطم MNZ 1كغ";
-    }
-    if (isBucket) {
-      if (weight === 9 || /9\s*كغ/.test(clean)) return "2609 سطل معجون طماطم العجمي 9كغ";
-      return "2608 سطل معجون طماطم العجمي 5كغ";
-    }
-    if (weight === 4 || /4\s*كغ/.test(clean)) return "2605 معجون الطماطم العجمي 4كغ";
-    if (weight === 2 || /2\s*كغ/.test(clean)) return "2604 معجون الطماطم العجمي 2كغ";
-    if (weight === 1 || /1\s*كغ/.test(clean)) return "2603 معجون الطماطم العجمي 1كغ";
-    if (weight === 500 || /500/.test(clean)) return "2602 معجون الطماطم العجمي 500غ";
-    return "2601 معجون الطماطم العجمي 100غ";
+  const hasHummus = /حمص/.test(clean);
+  const hasAseptic = /أسبتيك|اسبتيك|خام|مطبوخ/.test(clean);
+  const hasMNZ = /mnz|ام ان زد|إم إن زد/.test(clean);
+
+  if (hasLabneh) {
+    if (weightNum === 2750 || /كبيرة/.test(clean)) return "026 2750غ عجمي لبنة";
+    return "027 900غ عجمي لبنة";
   }
-  if (hasPomegranate) {
-    if (hasMNZ) return "2809 ظرف دبس رمان 9غ MNZ";
-    if (isPacket) return "2805 ظرف دبس رمان العجمي 9غ";
-    if (isBulk || /بيدون/.test(clean)) return "2804 بيدون صلصة دبس رمان العجمي";
-    if (isNatural) {
-      if (weight === 920 || /920/.test(clean)) return "2807 عبوة دبس رمان طبيعي العجمي 920غ";
-      return "2806 عبوة دبس رمان طبيعي العجمي 300غ";
-    }
-    if (weight === 940 || /940/.test(clean)) return "2801 عبوة صلصة دبس رمان العجمي 940غ";
-    if (weight === 500 || /500/.test(clean)) return "2803 عبوة صلصة دبس رمان العجمي 500غ";
-    return "2802 عبوة صلصة دبس رمان العجمي 300غ";
-  }
-  if (hasHotSauce || (/صلصة/.test(clean) && isHot)) {
-    if (hasMNZ) return "2706 ظرف صلصة حارة 9غ MNZ";
-    if (isPacket) return "2703 ظرف صلصة حارة العجمي 9غ";
-    if (/بيدون/.test(clean) || weight > 1000) return "2702 بيدون صلصة حارة العجمي";
-    if (weight === 800 || /800/.test(clean)) return "2705 عبوة صلصة حارة العجمي 800غ";
-    if (weight === 220 || /220/.test(clean)) return "2704 عبوة صلصة حارة العجمي 220غ";
-    return "2701 عبوة صلصة حارة العجمي 90غ";
-  }
-  if (hasKetchup) {
-    if (hasMNZ) {
-      if (isBucket || /9\s*كغ/.test(clean)) return "2207 سطل كتشب MNZ";
-      if (isPacket) return "2209 ظرف كتشب 9غ MNZ";
-      return "2208 عبوة كتشب MNZ 480غ";
-    }
-    if (isBulk || /دكما/.test(clean)) return "2124 كتشب العجمي دكما";
-    if (/بيدون/.test(clean)) return "2125 كتشب العجمي بيدون";
-    if (isPacket) return "2123 ظرف كتشب العجمي 9غ";
-    if (weight === 1100 || /1100/.test(clean)) return "2205 كتشب العجمي 1100غ";
-    if (weight === 480 || /480/.test(clean)) return "2130 عبوة كتشب العجمي 480غ";
-    return "2122 عبوة كتشب العجمي 225غ";
-  }
-  if (hasMayo) {
-    if (hasZad) return "2503 مايونيز زاد العربي دكما";
-    return "2510 مايونيز العجمي دكما";
-  }
+  if (hasAseptic) return "025 حمص خام أسبتيك 20 كغ";
+  if (hasAbuAbdo) return "028 أبو عبدو حمص 300غ";
+
   if (hasGarlic) {
-    // الصنف الجديد: ثوم العجمي 57غ
-    if (/57/.test(clean) || /57\s*غ/.test(clean)) return "2528 ثوم العجمي 57غ";
-    if (hasHalfMade) {
-      if (/مريق/.test(clean)) return "2506 كريم ثوم نصف مصنّع مريق";
-      if (/سميك/.test(clean)) return "2516 كريم ثوم نصف مصنّع سميك";
-      if (/وسط/.test(clean)) return "2524 كريم ثوم نصف مصنع وسط";
-      if (isWrapped || /ربط/.test(clean)) return "2517 كريم ثوم نصف مصنع ربط";
-      return "2506 كريم ثوم نصف مصنّع مريق";
+    if (isBulk) {
+      if (hasKhal) return "022 الخال كريم الثوم بالكيلو";
+      if (hasHimsani) return "021 الحمصاني كريم الثوم بالكيلو";
+      if (hasZad || hasMNZ) return "020 زاد العربي كريم الثوم بالكيلو";
+      return "020 زاد العربي كريم الثوم بالكيلو";
     }
-    if (isHot) {
-      if (isBulk) return "2522 كريم ثوم العجمي دكما حار";
-      return "2307 كريم ثوم العجمي مغلف حار";
-    }
-    if (hasMNZ) return "2508 كريم ثوم MNZ دكمة";
-    if (hasShaabi) {
-      if (/5\s*كغ/.test(clean) || (isBulk && /5/.test(clean))) return "2502 كريم ثوم الشعبي دكما";
-      if (isBulk) return "2523 كريم ثوم الشعبي دكما";
-      if (isPacket) return "2513 كريم ثوم الشعبي ظرف";
-      return "2118 كريم ثوم الشعبي مغلف";
-    }
-    if (hasKhal) {
-      if (isBulk) return "2527 كريم ثوم الخال دكما";
-      return "2114 كريم ثوم الخال ربط";
-    }
-    if (hasHimsani) return "2305 كريم ثوم الحمصاني مغلف";
-    if (hasZad) {
-      if (isBulk) return "2110 كريم ثوم زاد العربي دكما";
-      return "2306 كريم ثوم زاد العربي مغلف";
-    }
-    if (isBucket) return "2518 كريم ثوم العجمي سطل 1كغ";
-    if (isBulk) return "2505 كريم ثوم العجمي دكما";
-    if (isCan && (weight === 450 || /450/.test(clean))) return "2303 عبوة كريم ثوم العجمي 450غ";
-    if (isCan || weight === 230) return "2304 عبوة كريم ثوم العجمي 230غ";
-    return "2103 كريم ثوم العجمي مغلف";
+    if (hasZad) return "011 زاد العربي كريم الثوم 230غ";
+    if (hasKhal) return "016 الخال كريم الثوم 230غ";
+    if (hasHimsani) return "014 الحمصاني كريم الثوم 230غ";
+    if (weightNum === 225) return "007 عجمي كريم الثوم 225غ";
+    return "002 عجمي كريم الثوم 230غ";
   }
+
   if (hasMutabbal) {
-    if (isBulk) return "2512 متبل العجمي دكما";
-    if (isBucket) return "2515 متبل العجمي سطل 1كغ";
-    if (hasZad) return "2108 متبل زاد العربي مغلف";
-    if (weight === 500 || /500/.test(clean)) return "2115 عبوة متبل العجمي 500غ";
-    if (isCan || weight === 230) return "2106 عبوة متبل العجمي 230غ";
-    return "2102 متبل العجمي مغلف";
+    if (isBulk) return "024 عجمي متبل بالكيلو";
+    if (hasZad) return "012 زاد العربي متبل 230غ";
+    if (hasKhal) return "017 الخال متبل 230غ";
+    if (weightNum === 450) return "008 عجمي متبل 450غ";
+    if (weightNum === 225) return "009 عجمي متبل 225غ";
+    return "003 عجمي متبل 230غ";
   }
+
   if (hasHummus) {
-    if (hasKhal) {
-      if (isBulk) return "2526 حمص الخال دكما";
-      return "2113 حمص الخال ربط";
+    if (isBulk) {
+      if (hasHimsani) return "019 الحمصاني حمص بالكيلو";
+      return "018 عجمي حمص بالكيلو";
     }
-    if (hasShaabi) {
-      if (isBulk) return "2525 حمص الشعبي دكما";
-      if (isWrapped || /ربط/.test(clean)) return "2521 حمص الشعبي ربط";
-      return "2109 حمص الشعبي مغلف";
-    }
-    if (hasHimsani) return "2111 حمص الحمصاني مغلف";
-    if (hasZad) {
-      if (isBulk) return "2511 حمص زاد العربي دكما";
-      if (/نصاصي|نص/.test(clean) || weight === 500) return "2519 حمص زاد العربي نصاصي";
-      return "2107 حمص زاد العربي مغلف";
-    }
-    if (isBucket) {
-      if (weight === 5 || /5\s*كغ/.test(clean)) return "2514 حمص العجمي سطل 5كغ";
-      return "2507 حمص العجمي سطل 1كغ";
-    }
-    // لا يوجد "حمص العجمي دكما" في القائمة، لذا نتركه ليصبح نص حر
-    if (weight === 450 || /450/.test(clean)) return "2104 عبوة حمص العجمي 450غ";
-    if (weight === 230 || /230/.test(clean)) return "2105 عبوة حمص العجمي 230غ";
-    return "2101 حمص العجمي مغلف";
+    if (weightNum === 450) return "004 عجمي حمص 450غ";
+    if (weightNum === 300) return "005 عجمي حمص 300غ";
+    if (weightNum === 225) return "006 عجمي حمص 225غ";
+    if (hasZad) return "010 زاد العربي حمص بالطحينة 230غ";
+    if (hasKhal) return "015 الخال حمص 230غ";
+    if (hasHimsani) return "013 الحمصاني حمص 230غ";
+    return "001 عجمي حمص بالطحينة 230غ";
   }
+
+  // محاولة مطابقة جزئية
   for (const fullName of Object.keys(productWeights)) {
     const short = fullName.replace(/^\d+\s*/, '').toLowerCase();
     if (clean.includes(short) || short.includes(clean.replace(/\d+/g, '').trim())) {
@@ -742,36 +570,56 @@ function findBestProduct(line) {
   }
   return null;
 }
+
+/* ========== تحليل نص الواتساب - النسخة النهائية القوية ========== */
 function parseWhatsAppText(text) {
-  const lines = text.split(/\n|\r/).map(l => l.trim()).filter(l => l.length > 1);
+  const lines = text.split(/[\n\r]+/).map(l => l.trim()).filter(l => l.length > 2);
   const results = [];
+
   for (const line of lines) {
-    if (/طلبية|طلب\s|محافظة|اسم الزبون|ملاحظات|الزبون|المدينة|تاريخ|وقت/i.test(line) && !/\d/.test(arabicToLatinDigits(line))) {
+    // نتجاهل أسطر العناوين فقط
+    if (/^(طلبية|طلب|محافظة|اسم الزبون|ملاحظات|الزبون|المدينة|تاريخ|وقت|العنوان|الهاتف)/i.test(line) && 
+        !/\d{2,}/.test(arabicToLatinDigits(line))) {
       continue;
     }
+
     const qty = extractQuantity(line);
     if (!qty || qty <= 0) continue;
-    const product = findBestProduct(line);
-    let productName = product;
+
+    // نحاول نلاقي المنتج من القائمة
+    let product = findBestProduct(line);
     let weight = product ? productWeights[product] : '';
+
+    // إذا ما لقيناه → نكتب الاسم كما هو بالضبط (بعد تنظيف بسيط)
     if (!product) {
       let name = arabicToLatinDigits(line)
-        .replace(/(\d+(?:[.,]\d+)?)/g, '')
-        .replace(/(غرام|غ|كغ|كيلو|كغرام|جرام|دكما|دكمة|دكمه|طبشات|علبة|علب|سطل|ظرف|مغلف|ربط|عبوة)/gi, '')
+        // نشيل الكمية والكلمات المساعدة
+        .replace(/(?:الكمية|كميه|كمية|عدد|qty)\s*[:=]?\s*\d+(?:[.,]\d+)?/gi, '')
+        .replace(/^\d+(?:[.,]\d+)?\s*/, '')           // رقم في البداية
+        .replace(/\s*\d+(?:[.,]\d+)?\s*$/, '')        // رقم في النهاية
         .replace(/\s+/g, ' ')
         .trim();
-      if (!name) name = line;
-      productName = name;
+      
+      // لو صار فاضي نرجع للسطر الأصلي
+      if (!name || name.length < 2) name = line;
+      product = name;
+      
       const weightInfo = extractWeightInfo(line);
       if (weightInfo) weight = weightInfo.text;
     }
-    results.push({ product: productName, quantity: qty, weight: weight });
+
+    results.push({
+      product: product,
+      quantity: qty,
+      weight: weight
+    });
   }
   return results;
 }
+
 function fillFromParsed(results) {
   if (results.length === 0) {
-    alert('لم يتم التعرف على أي أصناف.\nتأكد من وجود كميات واضحة في النص.');
+    alert('لم يتم التعرف على أي أصناف.\nتأكد أن كل سطر يحتوي على كمية واضحة.');
     return;
   }
   document.getElementById('itemsBody').innerHTML = '';
@@ -792,28 +640,32 @@ function fillFromParsed(results) {
     }
   });
   updateTotalWeight();
-  alert(`تم تعبئة ${results.length} صنف بنجاح ✅\nراجع الكميات والأوزان قبل الإرسال.`);
+  alert(`تم تعبئة ${results.length} صنف بنجاح ✅\nيرجى مراجعة الكميات والأوزان قبل الإرسال.`);
 }
+
 function isDuplicate(v, c) {
   return [...document.querySelectorAll('[name^="product_"]')]
     .filter(i => i !== c && i.value.trim() !== "")
     .some(i => i.value.trim() === v);
 }
+
 function parseWeightToKg(weightStr) {
   if (!weightStr) return 0;
   const s = weightStr.trim().toLowerCase().replace(/,/g, '.');
-  // طرد XXXX غ → يستخرج الرقم الحقيقي
-  if (s.includes('طرد')) {
-    const match = s.match(/[\d.]+/);
-    if (match) return parseFloat(match[0]) / 1000;
-    return 4.8; // افتراضي قديم
-  }
   const match = s.match(/[\d.]+/);
   const num = match ? parseFloat(match[0]) : NaN;
   if (s.includes('كغ') || s.includes('كيلو')) return isNaN(num) ? 1 : num;
   if (s.includes('غرام') || s.includes('غ')) return isNaN(num) ? 0 : num / 1000;
   return isNaN(num) ? 0 : num;
 }
+
+function getPalletText(count) {
+  if (count <= 0) return '';
+  if (count === 1) return 'طبلية واحدة';
+  if (count === 2) return 'طبليتين';
+  return count + ' طبالي';
+}
+
 function updateTotalWeight() {
   let totalKg = 0;
   document.querySelectorAll('#itemsBody tr').forEach(row => {
@@ -821,27 +673,36 @@ function updateTotalWeight() {
     const wgt = row.querySelector('[name^="weight_"]')?.value || '';
     totalKg += qty * parseWeightToKg(wgt);
   });
-  // إضافة هامش وزن التغليف
-  const totalWithMargin = totalKg * (1 + PACKAGING_MARGIN);
+  const box = document.getElementById('totalWeightBox');
   const valueEl = document.getElementById('totalWeightValue');
   const statusEl = document.getElementById('weightStatus');
-  valueEl.textContent = totalWithMargin.toFixed(2) + ' كغ';
+  valueEl.textContent = totalKg.toFixed(2) + ' كغ';
+  
   if (totalKg <= 0) {
-    statusEl.textContent = 'أضف منتجات لحساب الوزن';
+    box.classList.remove('over-limit');
+    statusEl.textContent = 'أضف منتجات لحساب الوزن وعدد الطبالي';
     statusEl.style.color = '#666';
+    return;
+  }
+  const pallets = Math.ceil(totalKg / PALLET_MAX_KG);
+  const palletText = getPalletText(pallets);
+  if (pallets === 1) {
+    box.classList.remove('over-limit');
+    statusEl.innerHTML = `الطلبية سوف تتم على <strong>${palletText}</strong>`;
+    statusEl.style.color = '#2e7d32';
   } else {
-    statusEl.innerHTML = `وزن المنتجات: <strong>${totalKg.toFixed(2)} كغ</strong> + هامش تغليف 3%`;
-    statusEl.style.color = '#1e7a32';
+    box.classList.add('over-limit');
+    statusEl.innerHTML = `الطلبية سوف تتوزع على <strong>${palletText}</strong>`;
+    statusEl.style.color = '#e65100';
   }
 }
+
 function getDefaultWeightSelect(id, selectedValue = '') {
   const options = [
-    'طرد 4800 غ', 'طرد 3500 غ', '60 غرام', '90 غرام', '100 غرام', '200 غرام', '220 غرام', '225 غرام',
-    '230 غرام', '250 غرام', '275 غرام', '300 غرام', '450 غرام', '480 غرام',
-    '500 غرام', '800 غرام', '920 غرام', '940 غرام', '1100 غرام', '4200 غرام',
-    'كغ', '1 كغ', '2 كغ', '4 كغ', '5 كغ', '9 كغ'
+    '230 غرام', 'علبة 450 غرام', 'علبة 300 غرام', 'علبة 225 غرام',
+    'كيلو غرام', '2750 غرام', '900 غرام', '20 كغ'
   ];
-  let html = `<select name="weight_${id}" class="weight-select" required>`;
+  let html = `<select name="weight_${id}" class="weight-select">`;
   if (!selectedValue) html += `<option value="" disabled selected hidden>الوزن</option>`;
   options.forEach(opt => {
     const sel = (opt === selectedValue) ? ' selected' : '';
@@ -853,6 +714,7 @@ function getDefaultWeightSelect(id, selectedValue = '') {
   html += `</select>`;
   return html;
 }
+
 function addRow() {
   const id = rowCounter++;
   const tr = document.createElement('tr');
@@ -871,12 +733,15 @@ function addRow() {
     </td>
   `;
   document.getElementById('itemsBody').appendChild(tr);
+  
   const productInput = tr.querySelector(`[name="product_${id}"]`);
   const qtyInput = tr.querySelector(`[name="quantity_${id}"]`);
   const weightCell = tr.querySelector(`#weight-cell-${id}`);
+  
   qtyInput.addEventListener('input', updateTotalWeight);
   weightCell.addEventListener('change', updateTotalWeight);
   weightCell.addEventListener('input', updateTotalWeight);
+  
   productInput.addEventListener('input', function() {
     const val = this.value.trim();
     if (val === '') {
@@ -900,6 +765,7 @@ function addRow() {
     updateTotalWeight();
   });
 }
+
 function clearAllItems() {
   if (confirm('هل أنت متأكد من مسح كل الأصناف؟')) {
     document.getElementById('itemsBody').innerHTML = '';
@@ -908,6 +774,7 @@ function clearAllItems() {
     updateTotalWeight();
   }
 }
+
 function getOrderSummaryForDisplay() {
   const rows = document.querySelectorAll('#itemsBody tr');
   let summary = `عدد الأصناف: ${rows.length}\n───────────────\n\n`;
@@ -926,12 +793,13 @@ function getOrderSummaryForDisplay() {
       totalKg += (parseFloat(qty) || 0) * parseWeightToKg(wgt);
     }
   });
-  const totalWithMargin = totalKg * (1 + PACKAGING_MARGIN);
+  const pallets = Math.ceil(totalKg / PALLET_MAX_KG);
   summary += `───────────────\n`;
-  summary += `وزن المنتجات: ${totalKg.toFixed(2)} كغ\n`;
-  summary += `الوزن الإجمالي (مع هامش التغليف 3%): ${totalWithMargin.toFixed(2)} كغ\n`;
+  summary += `وزن الطلبية الإجمالي: ${totalKg.toFixed(2)} كغ\n`;
+  if (pallets > 0) summary += `عدد الطبالي: ${getPalletText(pallets)}\n`;
   return summary.trim();
 }
+
 function buildWhatsAppMessage() {
   const today = new Date();
   const weekdays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
@@ -943,14 +811,17 @@ function buildWhatsAppMessage() {
   const minutes = String(today.getMinutes()).padStart(2, '0');
   const period = today.getHours() >= 12 ? 'م' : 'ص';
   const dateTimeStr = `${weekday}، ${day}/${monthNum}/${year} • الساعة ${hours}:${minutes} ${period}`;
+  
   const gov = document.querySelector('[name="governorate"]').value.trim() || 'غير محدد';
   const name = document.querySelector('[name="customerName"]').value.trim() || 'غير محدد';
   const notes = document.querySelector('[name="notes"]').value.trim();
-  let msg = `*طلب جديد - منتجات العجمي* 📦\n`;
+  
+  let msg = `*طلب جديد - منتجات العجمي (تركيا)* 📦\n`;
   msg += `📅 ${dateTimeStr}\n\n`;
   msg += `📍 المحافظة: ${gov}\n`;
   msg += `👤 الزبون: ${name}\n\n`;
   msg += `*المنتجات:*\n`;
+  
   const rows = document.querySelectorAll('#itemsBody tr');
   let idx = 1;
   let totalKg = 0;
@@ -966,14 +837,17 @@ function buildWhatsAppMessage() {
       totalKg += (parseFloat(q) || 0) * parseWeightToKg(w);
     }
   });
-  const totalWithMargin = totalKg * (1 + PACKAGING_MARGIN);
+  
+  const pallets = Math.ceil(totalKg / PALLET_MAX_KG);
   msg += `*ملخص الوزن:*\n`;
-  msg += `وزن المنتجات: ${totalKg.toFixed(2)} كغ\n`;
-  msg += `الوزن الإجمالي (مع هامش التغليف): ${totalWithMargin.toFixed(2)} كغ\n\n`;
+  msg += `الوزن الإجمالي: ${totalKg.toFixed(2)} كغ\n`;
+  if (pallets > 0) msg += `عدد الطبالي: ${getPalletText(pallets)}\n`;
+  msg += `\n`;
   if (notes) msg += `*ملاحظات:*\n${notes}\n\n`;
   msg += `إجمالي الأصناف: ${idx - 1}\nشكراً لكم – بانتظار التأكيد والتوصيل 🛒`;
   return msg;
 }
+
 function reindexItems() {
   const rows = Array.from(document.querySelectorAll('#itemsBody tr'));
   const validRows = [];
@@ -1008,12 +882,15 @@ function reindexItems() {
   updateTotalWeight();
   return validRows.length;
 }
+
+/* ========== الأحداث ========== */
 document.getElementById('toggleImportBtn').addEventListener('click', function() {
   const section = document.getElementById('importSection');
   const isHidden = section.style.display === 'none' || section.style.display === '';
   section.style.display = isHidden ? 'block' : 'none';
   this.textContent = isHidden ? '▲ إخفاء استيراد الواتساب' : '📥 استيراد طلب من واتساب';
 });
+
 document.getElementById('parseBtn').addEventListener('click', function() {
   const text = document.getElementById('whatsappText').value.trim();
   if (!text) {
@@ -1023,10 +900,10 @@ document.getElementById('parseBtn').addEventListener('click', function() {
   const results = parseWhatsAppText(text);
   fillFromParsed(results);
 });
+
 addRow();
 updateTotalWeight();
-// تعبئة معرّف الجهاز عند التحميل
-document.getElementById('deviceIdField').value = getDeviceId();
+
 document.getElementById('orderForm').addEventListener('submit', e => {
   e.preventDefault();
   if (!e.target.governorate.value.trim() || !e.target.customerName.value.trim()) {
@@ -1038,24 +915,23 @@ document.getElementById('orderForm').addEventListener('submit', e => {
     alert('يجب إضافة منتج واحد على الأقل');
     return;
   }
-  // تأكيد وجود deviceId قبل الإرسال
-  document.getElementById('deviceIdField').value = getDeviceId();
   document.getElementById('reviewText').textContent = getOrderSummaryForDisplay();
   document.getElementById('reviewModal').style.display = 'flex';
 });
+
 document.getElementById('confirmAndSend').onclick = function() {
   document.getElementById('reviewModal').style.display = 'none';
   reindexItems();
-  // تأكيد وجود deviceId مرة أخرى
-  document.getElementById('deviceIdField').value = getDeviceId();
   const msg = buildWhatsAppMessage();
-  const phone = '963930949514';
+  const phone = '905522221237';
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+  
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.classList.add('loading');
   btn.textContent = 'جاري الإرسال...';
-  fetch('https://script.google.com/macros/s/AKfycbwYSgJEiwG_DZP-4B0MLjTIqkNwi4COBMNEnChF963jQVwIYe2FLF0ZGaJmrs6e56Lz/exec', {
+  
+  fetch('https://script.google.com/macros/s/AKfycbxrpX-EdIjiMZNNQwCBnWmMBzJaSqRBY5oSIYyFV0a95kMuAco-1JHaFa3ICNbMKzPI/exec', {
     method: 'POST',
     mode: 'no-cors',
     body: new FormData(document.getElementById('orderForm'))
@@ -1071,10 +947,9 @@ document.getElementById('confirmAndSend').onclick = function() {
     document.getElementById('whatsappText').value = '';
     document.getElementById('importSection').style.display = 'none';
     document.getElementById('toggleImportBtn').textContent = '📥 استيراد طلب من واتساب';
-    // إعادة تعبئة deviceId بعد reset
-    document.getElementById('deviceIdField').value = getDeviceId();
   });
 };
+
 document.getElementById('cancelReview').onclick = function() {
   document.getElementById('reviewModal').style.display = 'none';
 };
