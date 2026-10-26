@@ -424,50 +424,22 @@ function arabicToLatinDigits(str) {
   return str.replace(/[٠-٩۰-۹]/g, d => map[d] || d);
 }
 
-/* ========== استخراج الكمية - نسخة قوية جداً ========== */
+/* ========== استخراج الكمية - النسخة النهائية الموثوقة ========== */
 function extractQuantity(line) {
-  const latin = arabicToLatinDigits(line);
+  const text = arabicToLatinDigits(line);
   
-  // 1. أولوية عالية: بعد كلمة "الكمية" أو "عدد" أو "كميه"
-  let match = latin.match(/(?:الكمية|كميه|كمية|عدد|qty|quantity)\s*[:=]?\s*(\d+(?:[.,]\d+)?)/i);
-  if (match) {
-    const num = parseFloat(match[1].replace(',', '.'));
-    if (num > 0 && num < 100000) return num;
-  }
+  // نجمع كل الأرقام الموجودة في السطر
+  const numbers = text.match(/(\d+(?:[.,]\d+)?)/g);
+  if (!numbers || numbers.length === 0) return null;
 
-  // 2. الكمية في نهاية السطر (شائع جداً)
-  match = latin.match(/(\d+(?:[.,]\d+)?)\s*$/);
-  if (match) {
-    const num = parseFloat(match[1].replace(',', '.'));
-    if (num >= 1 && num < 100000) return num;
-  }
+  const nums = numbers
+    .map(n => parseFloat(n.replace(',', '.')))
+    .filter(n => !isNaN(n) && n > 0 && n < 100000);
 
-  // 3. الكمية في بداية السطر
-  match = latin.match(/^(\d+(?:[.,]\d+)?)/);
-  if (match) {
-    const num = parseFloat(match[1].replace(',', '.'));
-    if (num >= 1 && num < 100000) return num;
-  }
+  if (nums.length === 0) return null;
 
-  // 4. أي رقم كبير نسبياً (نستبعد الأوزان المعروفة)
-  let cleaned = latin
-    .replace(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام|كغ|كيلو|كغرام)/gi, ' ')
-    .replace(/(غرام|غ|جرام|كغ|كيلو|كغرام)\s*(\d+(?:[.,]\d+)?)/gi, ' ')
-    .replace(/\b(230|225|300|450|2750|900|20|00)\b/g, ' ');
-
-  const numbers = cleaned.match(/(\d+(?:[.,]\d+)?)/g);
-  if (numbers && numbers.length > 0) {
-    const nums = numbers
-      .map(n => parseFloat(n.replace(',', '.')))
-      .filter(n => !isNaN(n) && n >= 1 && n < 100000);
-    
-    if (nums.length > 0) {
-      // نفضل الأرقام الأكبر من 5
-      const large = nums.filter(n => n >= 5);
-      return large.length > 0 ? Math.max(...large) : Math.max(...nums);
-    }
-  }
-  return null;
+  // نفضل الرقم الأكبر (عادة الكمية أكبر من الوزن)
+  return Math.max(...nums);
 }
 
 /* ========== استخراج الوزن ========== */
@@ -478,7 +450,7 @@ function extractWeightInfo(line) {
   if (/900|صغيرة/.test(latin)) return { text: '900 غرام' };
   if (/20\s*كغ|20كغ|أسبتيك|اسبتيك|خام/.test(latin)) return { text: '20 كغ' };
   
-  if (/دكما|دكمة|دكمه|طبشات|بالكيلو|بال كيلو|كيلو|كغ/.test(latin) && !/\d+\s*كغ/.test(latin)) {
+  if (/دكما|دكمة|دكمه|طبشات|بالكيلو|بال كيلو|كيلو|كغ/.test(latin)) {
     return { text: 'كيلو غرام' };
   }
   
@@ -487,10 +459,9 @@ function extractWeightInfo(line) {
   if (/\b225\b/.test(latin)) return { text: 'علبة 225 غرام' };
   if (/\b230\b/.test(latin)) return { text: '230 غرام' };
   
-  const gramMatch = latin.match(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام)/i) ||
-                    latin.match(/(غرام|غ|جرام)\s*(\d+(?:[.,]\d+)?)/i);
+  const gramMatch = latin.match(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام)/i);
   if (gramMatch) {
-    const num = parseFloat((gramMatch[1] || gramMatch[2]).replace(',', '.'));
+    const num = parseFloat(gramMatch[1].replace(',', '.'));
     if (!isNaN(num) && num > 0 && num < 10000) {
       if ([450, 300, 225].includes(num)) return { text: 'علبة ' + num + ' غرام' };
       return { text: num + ' غرام' };
@@ -571,15 +542,15 @@ function findBestProduct(line) {
   return null;
 }
 
-/* ========== تحليل نص الواتساب - النسخة النهائية القوية ========== */
+/* ========== تحليل نص الواتساب - النسخة النهائية ========== */
 function parseWhatsAppText(text) {
-  const lines = text.split(/[\n\r]+/).map(l => l.trim()).filter(l => l.length > 2);
+  const lines = text.split(/[\n\r]+/).map(l => l.trim()).filter(l => l.length > 1);
   const results = [];
 
   for (const line of lines) {
-    // نتجاهل أسطر العناوين فقط
-    if (/^(طلبية|طلب|محافظة|اسم الزبون|ملاحظات|الزبون|المدينة|تاريخ|وقت|العنوان|الهاتف)/i.test(line) && 
-        !/\d{2,}/.test(arabicToLatinDigits(line))) {
+    // نتجاهل فقط أسطر العناوين الواضحة
+    if (/^(طلبية|طلب\s|محافظة|اسم الزبون|ملاحظات|الزبون|المدينة|تاريخ|وقت|العنوان|الهاتف)/i.test(line) && 
+        !/\d/.test(arabicToLatinDigits(line))) {
       continue;
     }
 
@@ -590,17 +561,14 @@ function parseWhatsAppText(text) {
     let product = findBestProduct(line);
     let weight = product ? productWeights[product] : '';
 
-    // إذا ما لقيناه → نكتب الاسم كما هو بالضبط (بعد تنظيف بسيط)
+    // إذا ما لقيناه → نكتب الاسم كما هو (بعد تنظيف بسيط للكمية)
     if (!product) {
       let name = arabicToLatinDigits(line)
-        // نشيل الكمية والكلمات المساعدة
-        .replace(/(?:الكمية|كميه|كمية|عدد|qty)\s*[:=]?\s*\d+(?:[.,]\d+)?/gi, '')
-        .replace(/^\d+(?:[.,]\d+)?\s*/, '')           // رقم في البداية
-        .replace(/\s*\d+(?:[.,]\d+)?\s*$/, '')        // رقم في النهاية
+        .replace(/(\d+(?:[.,]\d+)?)/g, '')          // نشيل الأرقام
+        .replace(/(غرام|غ|كغ|كيلو|كغرام|جرام|دكما|دكمة|دكمه|طبشات|علبة|علب)/gi, '')
         .replace(/\s+/g, ' ')
         .trim();
       
-      // لو صار فاضي نرجع للسطر الأصلي
       if (!name || name.length < 2) name = line;
       product = name;
       
