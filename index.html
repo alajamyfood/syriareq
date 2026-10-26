@@ -323,7 +323,7 @@ button[type="submit"] {
         <div class="weight-title">وزن الطلبية الإجمالي (مع هامش التغليف)</div>
         <div id="totalWeightValue" class="weight-value">0.00 كغ</div>
         <div id="weightStatus" class="weight-status">أضف منتجات لحساب الوزن</div>
-        <div class="weight-limit">ملاحظة: أصناف الظروف تُحسب كـ طرد 4800 غ + هامش تغليف 3%</div>
+        <div class="weight-limit">ملاحظة: أصناف الظروف تُحسب حسب وزن الطرد المحدد (مثل 4800 غ أو 3500 غ) + هامش تغليف 3%</div>
       </div>
     </div>
     <div class="form-group">
@@ -403,6 +403,7 @@ button[type="submit"] {
   <option value="2525 حمص الشعبي دكما">
   <option value="2526 حمص الخال دكما">
   <option value="2527 كريم ثوم الخال دكما">
+  <option value="2528 ثوم العجمي 57غ">
   <option value="2601 معجون الطماطم العجمي 100غ">
   <option value="2602 معجون الطماطم العجمي 500غ">
   <option value="2603 معجون الطماطم العجمي 1كغ">
@@ -482,6 +483,7 @@ const productWeights = {
   "2525 حمص الشعبي دكما": "كغ",
   "2526 حمص الخال دكما": "كغ",
   "2527 كريم ثوم الخال دكما": "كغ",
+  "2528 ثوم العجمي 57غ": "طرد 3500 غ",
   "2601 معجون الطماطم العجمي 100غ": "100 غرام",
   "2602 معجون الطماطم العجمي 500غ": "500 غرام",
   "2603 معجون الطماطم العجمي 1كغ": "1 كغ",
@@ -533,7 +535,7 @@ function extractQuantity(line) {
   let cleaned = latin
     .replace(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام|كغ|كيلو|كغرام|ك\.غ)/gi, ' ')
     .replace(/(غرام|غ|جرام|كغ|كيلو|كغرام|ك\.غ)\s*(\d+(?:[.,]\d+)?)/gi, ' ')
-    .replace(/\b(100|90|200|225|230|250|275|300|450|480|500|800|920|940|1100|4200)\b/g, ' ');
+    .replace(/\b(100|90|200|225|230|250|275|300|450|480|500|800|920|940|1100|4200|3500|57)\b/g, ' ');
   const matches = cleaned.match(/(\d+(?:[.,]\d+)?)/g);
   if (!matches || matches.length === 0) return null;
   const nums = matches
@@ -562,6 +564,7 @@ function extractWeightInfo(line) {
   if (/480/.test(latin)) return { text: '480 غرام' };
   if (/450/.test(latin)) return { text: '450 غرام' };
   if (/4200|4\.2\s*كغ/.test(latin)) return { text: '4200 غرام' };
+  if (/3500/.test(latin)) return { text: 'طرد 3500 غ' };
   if (/300/.test(latin)) return { text: '300 غرام' };
   if (/275/.test(latin)) return { text: '275 غرام' };
   if (/250/.test(latin)) return { text: '250 غرام' };
@@ -572,7 +575,8 @@ function extractWeightInfo(line) {
   if (/100/.test(latin)) return { text: '100 غرام' };
   if (/90/.test(latin)) return { text: '90 غرام' };
   if (/60/.test(latin)) return { text: '60 غرام' };
-  // الظروف → طرد 4800 غ
+  if (/57\s*غ|57غ/.test(latin)) return { text: 'طرد 3500 غ' };
+  // الظروف → طرد 4800 غ (الافتراضي)
   if (/9\s*غ|ظرف/.test(latin)) return { text: 'طرد 4800 غ' };
   const gramMatch = latin.match(/(\d+(?:[.,]\d+)?)\s*(غرام|غ|جرام)/i) ||
                     latin.match(/(غرام|غ|جرام)\s*(\d+(?:[.,]\d+)?)/i);
@@ -662,6 +666,8 @@ function findBestProduct(line) {
     return "2510 مايونيز العجمي دكما";
   }
   if (hasGarlic) {
+    // الصنف الجديد: ثوم العجمي 57غ
+    if (/57/.test(clean) || /57\s*غ/.test(clean)) return "2528 ثوم العجمي 57غ";
     if (hasHalfMade) {
       if (/مريق/.test(clean)) return "2506 كريم ثوم نصف مصنّع مريق";
       if (/سميك/.test(clean)) return "2516 كريم ثوم نصف مصنّع سميك";
@@ -796,9 +802,11 @@ function isDuplicate(v, c) {
 function parseWeightToKg(weightStr) {
   if (!weightStr) return 0;
   const s = weightStr.trim().toLowerCase().replace(/,/g, '.');
-  // طرد 4800 غ = 4.8 كغ
+  // طرد XXXX غ → يستخرج الرقم الحقيقي
   if (s.includes('طرد')) {
-    return 4.8;
+    const match = s.match(/[\d.]+/);
+    if (match) return parseFloat(match[0]) / 1000;
+    return 4.8; // افتراضي قديم
   }
   const match = s.match(/[\d.]+/);
   const num = match ? parseFloat(match[0]) : NaN;
@@ -828,7 +836,7 @@ function updateTotalWeight() {
 }
 function getDefaultWeightSelect(id, selectedValue = '') {
   const options = [
-    'طرد 4800 غ', '60 غرام', '90 غرام', '100 غرام', '200 غرام', '220 غرام', '225 غرام',
+    'طرد 4800 غ', 'طرد 3500 غ', '60 غرام', '90 غرام', '100 غرام', '200 غرام', '220 غرام', '225 غرام',
     '230 غرام', '250 غرام', '275 غرام', '300 غرام', '450 غرام', '480 غرام',
     '500 غرام', '800 غرام', '920 غرام', '940 غرام', '1100 غرام', '4200 غرام',
     'كغ', '1 كغ', '2 كغ', '4 كغ', '5 كغ', '9 كغ'
